@@ -1,0 +1,54 @@
+=javascript_include_tag("rails_admin/custom/rails_admin_globalize.js")
+
+%h2 Ready for translations, default locale is #{I18n.locale}
+
+- translations_field = @object.translated_attributes.keys.collect(&:to_sym)
+
+- default_locale = I18n.locale
+- target_locale = @target_locale
+
+- rails_admin_proxy = @object.class.rails_admin
+- rails_admin_fields = rails_admin_proxy.visible_fields.inject({}) { |a,f|  a[f.name] = f if translations_field.include?(f.name) ;a  }
+
+= form_for Blog.find(@object.id), :url=>rails_admin.globalize_path(@object.class.to_s.underscore, @object) do |form|
+  = select_tag 'target_locale', options_for_select( ( @object.respond_to?("available_locales") ? @object.try("available_locales") : I18n.available_locales.collect{|l| [l,l] }).select{|l| l.first.to_s != I18n.locale.to_s }, @target_locale ), :id=>"target_locale_select", :"data-target-url"=>rails_admin.globalize_path(@object.class.to_s.underscore, @object)
+
+  -rails_admin_fields.keys.each do |t|
+    %h5=t
+    .row-fluid
+      .span4
+        %pre=raw(@object.send(t))
+      .span8
+        -I18n.with_locale target_locale do
+          =render :partial=>"globalize_field", :locals => {:object=>@object, :form=>form, :field=>rails_admin_fields[t]}
+
+  - @associated_translations = @object.class.reflect_on_all_associations(:has_many).collect{|r| r.name if r.klass.respond_to?(:translation_options) }.compact
+  - @associated_translations += @object.class.reflect_on_all_associations(:has_one).collect{|r| r.name if r.klass.respond_to?(:translation_options) }.compact
+
+
+  - @associated_translations =  @object.associated_translations if @object.respond_to?("associated_translations")
+  - @associated_translations = @associated_translations.compact.flatten.uniq
+  - @associated_translations.each do |association|
+
+    - collection = @object.send(association)
+    - translations_field = collection.first.translated_attributes.keys.collect(&:to_sym)
+    - rails_admin_proxy = collection.first.class.rails_admin
+    - rails_admin_fields = rails_admin_proxy.visible_fields.inject({}) { |a,f|  a[f.name] = f if translations_field.include?(f.name) ;a  }
+
+    = form.fields_for association.to_sym do |subform|
+      - obj = subform.object
+      %h4 Traduzioni di #{collection.first.class}
+      -rails_admin_fields.each do |t, field|
+        %h5=t
+        .row-fluid
+          .span4
+            %pre= raw(obj.send(t))
+          .span8
+            %pre
+              -I18n.with_locale target_locale do
+                =render :partial=>"globalize_field", :locals => {:field=>field, :object=>obj, :form=>subform}
+
+  =form.submit
+
+
+

@@ -1,0 +1,11 @@
+
+en:
+  admin:
+    actions:
+      globalize:
+        title: "Globalize"
+        menu: "Globalize for %{model_label} '%{object_label}'"
+        breadcrumb: "Globalize"
+        link: "Globalize"
+        bulk_link: "Globalize selected %{model_label_plural}"
+        done: "Globalizeed"
