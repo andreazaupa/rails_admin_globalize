@@ -28,25 +28,26 @@
 
   - @associated_translations =  @object.associated_translations if @object.respond_to?("associated_translations")
   - @associated_translations = @associated_translations.compact.flatten.uniq
-  - @associated_translations.each do |association|
+  - if @associated_translations
+    - @associated_translations.each do |association|
 
-    - collection = @object.send(association)
-    - translations_field = collection.first.translated_attributes.keys.collect(&:to_sym)
-    - rails_admin_proxy = collection.first.class.rails_admin
-    - rails_admin_fields = rails_admin_proxy.visible_fields.inject({}) { |a,f|  a[f.name] = f if translations_field.include?(f.name) ;a  }
+      - collection = @object.send(association)
+      - translations_field = collection.first.translated_attributes.keys.collect(&:to_sym)
+      - rails_admin_proxy = collection.first.class.rails_admin
+      - rails_admin_fields = rails_admin_proxy.visible_fields.inject({}) { |a,f|  a[f.name] = f if translations_field.include?(f.name) ;a  }
 
-    = form.fields_for association.to_sym do |subform|
-      - obj = subform.object
-      %h4 Traduzioni di #{collection.first.class}
-      -rails_admin_fields.each do |t, field|
-        %h5=t
-        .row-fluid
-          .span4
-            %pre= raw(obj.send(t))
-          .span8
-            %pre
-              -I18n.with_locale target_locale do
-                =render :partial=>"globalize_field", :locals => {:field=>field, :object=>obj, :form=>subform}
+      = form.fields_for association.to_sym do |subform|
+        - obj = subform.object
+        %h4 Traduzioni di #{collection.first.class}
+        -rails_admin_fields.each do |t, field|
+          %h5=t
+          .row-fluid
+            .span4
+              %pre= raw(obj.send(t))
+            .span8
+              %pre
+                -I18n.with_locale target_locale do
+                  =render :partial=>"globalize_field", :locals => {:field=>field, :object=>obj, :form=>subform}
 
   =form.submit
 
