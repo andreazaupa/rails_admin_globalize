@@ -12,7 +12,7 @@
 
 = form_for @object, :url=>rails_admin.globalize_path(@object.class.to_s.split("::").map(&:underscore).join("~"), @object.id) do |form|
   =# form.error_messages #if form.object.errors
-  = select_tag 'target_locale', options_for_select( ( @object.respond_to?("available_locales") ? @object.try("available_locales") : I18n.available_locales.collect{|l| [l,l] }).select{|l| l.first.to_s != I18n.locale.to_s }, @target_locale ), :id=>"target_locale_select", :"data-target-url"=>rails_admin.globalize_path(@object.class.to_s.underscore, @object.id)
+  = select_tag 'target_locale', options_for_select(  @available_locales, @target_locale ), :id=>"target_locale_select", :"data-target-url"=>rails_admin.globalize_path(@object.class.to_s.underscore, @object.id)
 
   -rails_admin_fields.keys.each do |t|
     %h5=t

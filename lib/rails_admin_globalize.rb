@@ -9,14 +9,14 @@ require 'rails_admin/config/actions'
 module RailsAdmin
   module Config
     module Actions
+
       class Globalize < Base
+
         RailsAdmin::Config::Actions.register(self)
 
-        register_instance_option :object_level do
+        register_instance_option :member? do
           true
         end
-
-
 
         register_instance_option :visible? do
           authorized? && bindings[:object].class.respond_to?("translated_attribute_names")
@@ -38,9 +38,13 @@ module RailsAdmin
 
           Proc.new do
 
+
+            @available_locales = (I18n.available_locales - [I18n.locale])
+            @available_locales = @object.available_locales if @object.respond_to?("available_locales")
+
             if  request.get?
 
-              @target_locale = params[:target_locale] || (I18n.available_locales - [I18n.locale]).first || I18n.locale
+              @target_locale = params[:target_locale] || @available_locales.first || I18n.locale
 
             else
 
