@@ -42,18 +42,21 @@ module RailsAdmin
 
             else
 
-              loc=I18n.locale
+              loc=@current_locale=I18n.locale
               @target_locale = params[:target_locale]
 
               I18n.locale = @target_locale
 
-                @object.update_attributes(params[@object.class.to_s.underscore])
+              result = @object.update_attributes(params[@object.class.to_s.underscore])
 
 
               I18n.locale=loc
-             flash[:notice] = "Translation Update successfull  #{@target_locale} #{I18n.locale}"
-
-              # redirect_to back_or_index
+              if result
+                flash[:notice] = I18n.t("rails_admin.globalize.success")
+                redirect_to back_or_index
+              else
+                flash[:alert] = I18n.t("rails_admin.globalize.error")
+              end
 
             end
 
