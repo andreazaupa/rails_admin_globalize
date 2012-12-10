@@ -16,8 +16,10 @@ module RailsAdmin
           true
         end
 
+
+
         register_instance_option :visible? do
-          true#authorized? && !bindings[:object].approved
+          authorized? && bindings[:object].class.respond_to?("translated_attribute_names")
         end
 
         register_instance_option :link_icon do
