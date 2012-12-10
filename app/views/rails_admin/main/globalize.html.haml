@@ -32,7 +32,8 @@
     - @associated_translations.each do |association|
 
       - collection = @object.send(association)
-      - if collection
+      - if collection.present?
+        - collection = [collection].flatten.uniq
         - translations_field = collection.first.translated_attributes.keys.collect(&:to_sym)
         - rails_admin_proxy = collection.first.class.rails_admin
         - rails_admin_fields = rails_admin_proxy.visible_fields.inject({}) { |a,f|  a[f.name] = f if translations_field.include?(f.name) ;a  }
