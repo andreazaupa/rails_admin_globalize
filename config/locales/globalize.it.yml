@@ -1,0 +1,12 @@
+it:
+  admin:
+    actions:
+      globalize:
+        title: "Traduci"
+        subtitle: "Inserisci la traduzione dalla lingua %{locale_name} alla lingua selezionata:"
+        menu: "Traduci"
+        breadcrumb: "Traduci"
+        link: "Traduci"
+        bulk_link: "Traduci %{model_label_plural}"
+        done: "Tradotto"
+        associated_translations: "Traduzioni per %{associated_model}"

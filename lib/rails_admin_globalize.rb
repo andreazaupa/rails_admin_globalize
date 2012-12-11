@@ -53,7 +53,7 @@ module RailsAdmin
 
               I18n.locale = @target_locale
 
-              result = @object.update_attributes(params[@object.class.to_s.underscore])
+              result = @object.update_attributes(params[@abstract_model.param_key])
 
 
               I18n.locale=loc

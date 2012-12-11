@@ -1,41 +1,40 @@
 - in_error = object.errors.present? && object.errors.messages.keys.include?(field.method_name)
 .control-group{:class=>("#{field.css_class} #{field.type}_type #{'error' if in_error}")}
-  =content_tag(:span, "#{field.label}").html_safe
-  %br
-  - if field.type==:text
-    :ruby
-      if field.ckeditor
-        richtext = 'ckeditor'
-        js_data = {
-          :jspath => field.ckeditor_location ? field.ckeditor_location : field.ckeditor_base_location + "ckeditor.js",
-          :base_location => field.ckeditor_base_location,
-          :options => {
-            :customConfig => field.ckeditor_config_js ? field.ckeditor_config_js : field.ckeditor_base_location + "config.js"
+  .controls{:class => field.type.eql?('text') ? 'well' : ''}
+    - if field.type==:text
+      :ruby
+        if field.ckeditor
+          richtext = 'ckeditor'
+          js_data = {
+            :jspath => field.ckeditor_location ? field.ckeditor_location : field.ckeditor_base_location + "ckeditor.js",
+            :base_location => field.ckeditor_base_location,
+            :options => {
+              :customConfig => field.ckeditor_config_js ? field.ckeditor_config_js : field.ckeditor_base_location + "config.js"
+            }
           }
-        }
-      elsif field.codemirror
-        richtext = 'codemirror'
-        js_data = {
-          :csspath => field.codemirror_css_location,
-          :jspath => field.codemirror_js_location,
-          :options => field.codemirror_config,
-          :locations => field.codemirror_assets
-        }
-      elsif field.bootstrap_wysihtml5
-        richtext = 'bootstrap-wysihtml5'
-        js_data = {
-          :csspath => field.bootstrap_wysihtml5_css_location,
-          :jspath => field.bootstrap_wysihtml5_js_location,
-          :config_options => field.bootstrap_wysihtml5_config_options.to_json
-        }
-      else
-        richtext = false
-        js_data = {}
-      end
+        elsif field.codemirror
+          richtext = 'codemirror'
+          js_data = {
+            :csspath => field.codemirror_css_location,
+            :jspath => field.codemirror_js_location,
+            :options => field.codemirror_config,
+            :locations => field.codemirror_assets
+          }
+        elsif field.bootstrap_wysihtml5
+          richtext = 'bootstrap-wysihtml5'
+          js_data = {
+            :csspath => field.bootstrap_wysihtml5_css_location,
+            :jspath => field.bootstrap_wysihtml5_js_location,
+            :config_options => field.bootstrap_wysihtml5_config_options.to_json
+          }
+        else
+          richtext = false
+          js_data = {}
+        end
 
-    = form.text_area field.method_name, field.html_attributes.reverse_merge(:data => { :richtext => richtext, :options => js_data.to_json }).reverse_merge(:value => object.send(field.name))
-  - else
-    = form.send(field.view_helper, field.method_name, field.html_attributes)
-  -if in_error
-    -I18n.with_locale @current_locale do
-      =content_tag(:span, "#{object.errors.messages[field.method_name]}", :class => 'help-inline', :style=>"color: #B94A48").html_safe
+      = form.text_area field.method_name, field.html_attributes.reverse_merge(:data => { :richtext => richtext, :options => js_data.to_json }).reverse_merge(:value => object.send(field.name))
+    - else
+      = form.send(field.view_helper, field.method_name, field.html_attributes)
+    -if in_error
+      -I18n.with_locale @current_locale do
+        =content_tag(:span, "#{object.errors.messages[field.method_name]}", :class => 'help-inline', :style=>"color: #B94A48").html_safe
