@@ -4,7 +4,7 @@ it:
       globalize:
         title: "Traduci"
         subtitle: "Inserisci la traduzione dalla lingua %{locale_name} alla lingua selezionata:"
-        menu: "Traduci %{model_label} '%{object_label}'"
+        menu: "Traduci"
         breadcrumb: "Traduci"
         link: "Traduci"
         bulk_link: "Traduci %{model_label_plural}"

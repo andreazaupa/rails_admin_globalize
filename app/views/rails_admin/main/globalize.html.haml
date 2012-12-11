@@ -44,7 +44,7 @@
 
         = form.fields_for association.to_sym do |subform|
           - obj = subform.object
-          %h4= raw I18n.translate("admin.actions.globalize.associated_translations", :associated_model => "<strong>#{collection.first.class.model_name}</strong>")
+          %h4= raw I18n.translate("admin.actions.globalize.associated_translations", :associated_model => "<strong>#{rails_admin_proxy.label_plural}</strong>")
           - rails_admin_fields.each do |t, field|
             %h5= t
             .row-fluid
