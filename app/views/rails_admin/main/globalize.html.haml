@@ -14,7 +14,7 @@
 - rails_admin_fields = @object.class.rails_admin.edit.with(:view=>self, :object=>@object, :controller=>@controller).visible_fields.inject({}) { |a,f| a[f.name] = f if translations_field.include?(f.name) ; a }
 
 = form_for @object, :url => rails_admin.globalize_path(@object.class.to_s.split("::").map(&:underscore).join("~"), @object.id), :html => {:class => 'globalize-form'} do |form|
-  = select_tag 'target_locale', options_for_select(  @available_locales, @target_locale ), :id=>"target_locale_select", :"data-target-url"=>rails_admin.globalize_path(@object.class.to_s.split("::").map(&:underscore).join("~"), @object.id)
+  = select_tag 'target_locale', options_for_select(  @available_locales, @target_locale ), :id => "target_locale_select", :"data-target-url" => rails_admin.globalize_path(@object.class.to_s.split("::").map(&:underscore).join("~"), @object.id)
 
   - rails_admin_fields.keys.each do |t|
     %h5= t
@@ -54,6 +54,35 @@
               .span8
                 - I18n.with_locale target_locale do
                   = render :partial => "globalize_field", :locals => {:field => field, :object => obj, :form => subform}
+
+          - @sub_associated_translations = collection.first.class.associated_model_to_globalize rescue nil
+
+          - if @sub_associated_translations.present?
+
+            - if @sub_associated_translations[:has_many].present?
+              - @sub_associated_translations[:has_many].each do |has_many_associated_model|
+
+                - associated_model = obj.send(has_many_associated_model)
+                - associated_translations_field = associated_model.first.translated_attributes.keys.collect(&:to_sym)
+                - associated_rails_admin_proxy = associated_model.first.class.rails_admin
+                - associated_rails_admin_fields = associated_rails_admin_proxy.visible_fields.inject({}) { |a,f|  a[f.name] = f if associated_translations_field.include?(f.name) ;a  }
+
+                = subform.fields_for has_many_associated_model.to_sym do |subsubform|
+                  - sub_obj = subsubform.object
+                  - associated_rails_admin_fields.each do |t, field|
+                    %h5= t
+                    .row-fluid
+                      .span4
+                        .controls.well{ :class => "#{associated_rails_admin_fields[t].type}_type" }
+                          .original-content= raw sub_obj.send(t)
+                      .span8
+                        - I18n.with_locale target_locale do
+                          = render :partial => "globalize_field", :locals => {:field => field, :object => sub_obj, :form => subsubform}
+
+            - if @sub_associated_translations[:has_one].present?
+              - @sub_associated_translations[:has_one].each do |has_one_associated_model|
+                = # TODO
+
 
   %input{:type => :hidden, :name => 'return_to', :value => (params[:return_to].presence || request.referer)}
   .form-actions
