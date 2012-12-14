@@ -9,8 +9,9 @@
 - default_locale = I18n.locale
 - target_locale = @target_locale
 
-- rails_admin_proxy = @object.class.rails_admin
-- rails_admin_fields = rails_admin_proxy.visible_fields.inject({}) { |a,f| a[f.name] = f if translations_field.include?(f.name) ; a }
+- rails_admin_proxy = @model_config
+
+- rails_admin_fields = @object.class.rails_admin.edit.with(:view=>self, :object=>@object, :controller=>@controller).visible_fields.inject({}) { |a,f| a[f.name] = f if translations_field.include?(f.name) ; a }
 
 = form_for @object, :url => rails_admin.globalize_path(@object.class.to_s.split("::").map(&:underscore).join("~"), @object.id), :html => {:class => 'globalize-form'} do |form|
   = select_tag 'target_locale', options_for_select(  @available_locales, @target_locale ), :id=>"target_locale_select", :"data-target-url"=>rails_admin.globalize_path(@object.class.to_s.split("::").map(&:underscore).join("~"), @object.id)
