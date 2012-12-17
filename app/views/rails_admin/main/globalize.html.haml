@@ -40,8 +40,7 @@
         - collection = [collection].flatten.uniq
         - translations_field = collection.first.translated_attributes.keys.collect(&:to_sym)
         - rails_admin_proxy = collection.first.class.rails_admin
-        - rails_admin_fields = rails_admin_proxy.visible_fields.inject({}) { |a,f|  a[f.name] = f if translations_field.include?(f.name) ;a  }
-
+        - rails_admin_fields = rails_admin_proxy.edit.with(:view=>self, :object=>collection.first, :controller=>@controller).visible_fields.inject({}) { |a,f| a[f.name] = f if translations_field.include?(f.name) ; a }
         = form.fields_for association.to_sym do |subform|
           - obj = subform.object
           %h4= raw I18n.translate("admin.actions.globalize.associated_translations", :associated_model => "<strong>#{rails_admin_proxy.label_plural}</strong>")
