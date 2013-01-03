@@ -10,12 +10,12 @@ Gem::Specification.new do |s|
   s.authors     = ["Andrea Zaupa"]
   s.email       = ["azaupa@gmail.com"]
   s.homepage    = "https://github.com/andreazaupa/rails_admin_globalize"
-  s.summary     = "Add Translations action to rails_admin + globalize3"
+  s.summary     = "Translation action to rails_admin + globalize3"
   s.description = "RailsAdminGlobalize."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
 
-  s.add_dependency "rails", "~> 3.2.9"
+  s.add_dependency "rails", "~> 3.2"
   s.add_dependency "rails_admin", "~> 0.3.0"
   s.add_dependency "globalize3", "0.2.0"
 end
