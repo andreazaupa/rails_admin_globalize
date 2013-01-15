@@ -1,7 +1,8 @@
 #Rails Admin Globalize custom action . 
 
-this code is untested and need a good rewrite, but seems to work.
-treat it like a prototype . 
+this code is untested and need a good rewrite, but work.
+treat it as a prototype.
+
 
 #Usage:
 
