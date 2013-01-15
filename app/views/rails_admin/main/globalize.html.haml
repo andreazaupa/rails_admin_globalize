@@ -43,16 +43,17 @@
         - rails_admin_fields = rails_admin_proxy.edit.with(:view=>self, :object=>collection.first, :controller=>@controller).visible_fields.inject({}) { |a,f| a[f.name] = f if translations_field.include?(f.name) ; a }
         = form.fields_for association.to_sym do |subform|
           - obj = subform.object
-          %h4= raw I18n.translate("admin.actions.globalize.associated_translations", :associated_model => "<strong>#{rails_admin_proxy.label_plural}</strong>")
-          - rails_admin_fields.each do |t, field|
-            %h5= t
-            .row-fluid
-              .span4
-                .controls.well{ :class => "#{rails_admin_fields[t].type}_type" }
-                  .original-content= raw obj.send(t)
-              .span8
-                - I18n.with_locale target_locale do
-                  = render :partial => "globalize_field", :locals => {:field => field, :object => obj, :form => subform}
+          - if obj
+            %h4= raw I18n.translate("admin.actions.globalize.associated_translations", :associated_model => "<strong>#{rails_admin_proxy.label_plural}</strong>")
+            - rails_admin_fields.each do |t, field|
+              %h5= t
+              .row-fluid
+                .span4
+                  .controls.well{ :class => "#{rails_admin_fields[t].type}_type" }
+                    .original-content= raw obj.send(t)
+                .span8
+                  - I18n.with_locale target_locale do
+                    = render :partial => "globalize_field", :locals => {:field => field, :object => obj, :form => subform}
 
           - @sub_associated_translations = collection.first.class.associated_model_to_globalize rescue nil
 
