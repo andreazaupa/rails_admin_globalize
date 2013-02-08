@@ -1,0 +1,14 @@
+fr:
+  admin:
+    actions:
+      globalize:
+        title: "Traduction"
+        subtitle: "Traduire depuis %{locale_name} pour la langue sélectionnée :"
+        menu: "Traduire"
+        breadcrumb: "Traduction"
+        link: "Traduction"
+        bulk_link: "Traduire les %{model_label_plural} sélectionnés"
+        done: "Traduit"
+  rails_admin:
+    globalize:
+      success: "Traduction enregistrée"
