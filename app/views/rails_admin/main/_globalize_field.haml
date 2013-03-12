@@ -27,7 +27,7 @@
             :jspath => field.bootstrap_wysihtml5_js_location,
             :config_options => field.bootstrap_wysihtml5_config_options.to_json
           }
-        elsif field.rich
+        elsif field.respond_to?(:rich) && field.rich
           richtext = 'rich'
         else
           richtext = false
