@@ -11,24 +11,24 @@
 
 - rails_admin_proxy = @model_config
 
-- rails_admin_fields = @object.class.rails_admin.edit.with(:view=>self, :object=>@object, :controller=>@controller).visible_fields.inject({}) { |a,f| a[f.name] = f if translations_field.include?(f.name) ; a }
-
-= form_for @object, :url => rails_admin.globalize_path(@object.class.to_s.split("::").map(&:underscore).join("~"), @object.id), :html => {:class => 'globalize-form'} do |form|
+= rails_admin_form_for @object, :url => rails_admin.globalize_path(@object.class.to_s.split("::").map(&:underscore).join("~"), @object.id), :html => {:class => 'globalize-form'} do |form|
   = select_tag 'target_locale', options_for_select(  @available_locales, @target_locale ), :id => "target_locale_select", :"data-target-url" => rails_admin.globalize_path(@object.class.to_s.split("::").map(&:underscore).join("~"), @object.id)
 
-  - rails_admin_fields.keys.each do |t|
-    %h5= t
+  - ra_config_section = @object.class.rails_admin.edit.with(:view=>self, :object=>@object, :controller=>@controller, :form=>form)
+  - rails_admin_fields = ra_config_section.visible_fields.inject({}) { |a,f| a[f.name] = f if translations_field.include?(f.name) ; a }
+
+  - rails_admin_fields.each do |t, f|
+    %h5= f.label
     .row-fluid
       .span4
         .controls.well{ :class => "#{rails_admin_fields[t].type}_type" }
           .original-content= raw @object.send(t)
       .span8
         - I18n.with_locale target_locale do
-          = render :partial => "globalize_field", :locals => {:object => @object, :form => form, :field => rails_admin_fields[t]}
+          = render :partial => "globalize_field", :locals => { :object => @object, :form => form, :field => rails_admin_fields[t] }
 
   - @associated_translations = @object.class.reflect_on_all_associations(:has_many).collect{|r| r.name if r.klass.respond_to?(:translation_options) }.compact
   - @associated_translations += @object.class.reflect_on_all_associations(:has_one).collect{|r| r.name if r.klass.respond_to?(:translation_options) }.compact
-
 
   - @associated_translations =  @object.associated_translations if @object.respond_to?("associated_translations")
   - @associated_translations = @associated_translations.compact.flatten.uniq

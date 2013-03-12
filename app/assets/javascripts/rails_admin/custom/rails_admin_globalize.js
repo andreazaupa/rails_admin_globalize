@@ -1,5 +1,5 @@
 $(function() {
-  $("#target_locale_select").live("change", function(e) {
+  $('.globalize-form').on("change", "#target_locale_select", function(e) {
     var url = $("#target_locale_select").data("target-url");
     location.replace(updateQueryStringParameter(url, "target_locale", $("#target_locale_select").val()));
   });
