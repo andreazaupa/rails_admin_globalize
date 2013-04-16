@@ -1,7 +1,7 @@
 - in_error = object.errors.present? && object.errors.messages.keys.include?(field.method_name)
 .control-group{:class=>("#{field.css_class} #{field.type}_type #{'error' if in_error}")}
   .controls{:class => field.type.eql?('text') ? 'well' : ''}
-    - if field.type==:text
+    - if field.type == :text
       :ruby
         if field.ckeditor
           richtext = 'ckeditor'
@@ -33,8 +33,10 @@
         end
 
       = form.text_area field.method_name, field.html_attributes.reverse_merge(:data => { :richtext => richtext, :options => js_data.to_json }).reverse_merge(:value => object.send(field.name))
+
     - else
       = form.send(field.view_helper, field.method_name, field.html_attributes)
+
     -if in_error
       -I18n.with_locale @current_locale do
         =content_tag(:span, "#{object.errors.messages[field.method_name]}", :class => 'help-inline', :style=>"color: #B94A48").html_safe
