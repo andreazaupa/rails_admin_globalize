@@ -14,7 +14,6 @@
   @associated_translations = @object.associated_translations if @object.respond_to?("associated_translations")
   @associated_translations = @associated_translations.compact.flatten.uniq
 
-
 = javascript_include_tag "rails_admin/custom/rails_admin_globalize.js"
 = stylesheet_link_tag "rails_admin/custom/rails_admin_globalize.css"
 
@@ -32,9 +31,7 @@
           .original-content= raw @object.send(t)
       .span8
         - I18n.with_locale target_locale do
-          = render :partial => "globalize_field", :locals => {:object => @object, :form => form, :field => rails_admin_fields[t]}
-
-
+          = render :partial => "globalize_field", :locals => { :object => @object, :form => form, :field => rails_admin_fields[t] }
   - if @associated_translations
     - @associated_translations.each do |association|
 
