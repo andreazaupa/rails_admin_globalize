@@ -50,8 +50,9 @@ module RailsAdmin
               loc = @current_locale = I18n.locale
               @target_locale = params[:target_locale]
               I18n.locale = @target_locale
-
-              result = @object.update_attributes(params[@abstract_model.param_key])
+              p = params[@abstract_model.param_key]
+              p = p.permit! if @object.class.include?(ActiveModel::ForbiddenAttributesProtection) rescue nil
+              result = @object.update_attributes(p)
 
               I18n.locale = loc
               if result

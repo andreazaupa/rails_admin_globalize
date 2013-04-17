@@ -8,7 +8,6 @@ jQuery ->
   updateQueryStringParameter = (uri, key, value) ->
     separator = if (uri.indexOf('?') != -1) then "&" else "?"
     reg_exp = new RegExp("([?|&])#{key}=.*?(&|$)", "i")
-
     if (uri.match(reg_exp))
       return uri.replace(reg_exp, "$1#{key}=#{value}$2")
     else
