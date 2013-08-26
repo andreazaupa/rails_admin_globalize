@@ -1,6 +1,7 @@
 - in_error = object.errors.present? && object.errors.messages.keys.include?(field.method_name)
 .control-group{:class=>("#{field.css_class} #{field.type}_type #{'error' if in_error}")}
   .controls{:class => field.type.eql?('text') ? 'well' : ''}
+    = field.type
     - if field.type == :text
       :ruby
         if field.ckeditor
@@ -37,9 +38,9 @@
 
     - elsif field.type == :rich_editor
       = render :partial => "rails_admin/main/form_rich_text", :locals => { form: form, field: field }
-    - elsif field.type == :carrierwave
-      = render :partial => "file_upload", :locals => { form: form, field: field } if false
-      = link_to("EDIT", rails_admin.edit_path(object.class.to_s.gsub("::","~").underscore,object.id), :target=>"_blank")
+    - elsif field.type == :carrierwave || field.type == :jcrop
+      = render :partial => "file_upload", :locals => { form: form, field: field } #if false
+      =# link_to("EDIT", rails_admin.edit_path(object.class.to_s.gsub("::","~").underscore,object.id), :target=>"_blank")
     - else
       = form.send(field.view_helper, field.method_name, field.html_attributes)
     - if in_error
