@@ -34,7 +34,7 @@ module RailsAdmin
         end
 
         register_instance_option :http_methods do
-          [:get,:put]
+          [:get, :put, :patch]
         end
 
         register_instance_option :controller do
