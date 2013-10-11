@@ -63,21 +63,22 @@
               - @sub_associated_translations[:has_many].each do |has_many_associated_model|
 
                 - associated_model = obj.send(has_many_associated_model)
-                - associated_translations_field = associated_model.first.translated_attributes.keys.collect(&:to_sym)
-                - associated_rails_admin_proxy = associated_model.first.class.rails_admin
-                - associated_rails_admin_fields = associated_rails_admin_proxy.visible_fields.inject({}) { |a,f|  a[f.name] = f if associated_translations_field.include?(f.name) ;a  }
+                - if associated_model
+                  - associated_translations_field = associated_model.first.translated_attributes.keys.collect(&:to_sym)
+                  - associated_rails_admin_proxy = associated_model.first.class.rails_admin
+                  - associated_rails_admin_fields = associated_rails_admin_proxy.visible_fields.inject({}) { |a,f|  a[f.name] = f if associated_translations_field.include?(f.name) ;a  }
 
-                = subform.fields_for has_many_associated_model.to_sym do |subsubform|
-                  - sub_obj = subsubform.object
-                  - associated_rails_admin_fields.each do |t, field|
-                    %h5 #{subsubform.object.class.human_attribute_name(t.to_sym)}:
-                    .row-fluid
-                      .span4
-                        .controls.well{ :class => "#{associated_rails_admin_fields[t].type}_type" }
-                          .original-content= raw sub_obj.send(t)
-                      .span8
-                        - I18n.with_locale target_locale do
-                          = render :partial => "globalize_field", :locals => {:field => field, :object => sub_obj, :form => subsubform}
+                  = subform.fields_for has_many_associated_model.to_sym do |subsubform|
+                    - sub_obj = subsubform.object
+                    - associated_rails_admin_fields.each do |t, field|
+                      %h5 #{subsubform.object.class.human_attribute_name(t.to_sym)}:
+                      .row-fluid
+                        .span4
+                          .controls.well{ :class => "#{associated_rails_admin_fields[t].type}_type" }
+                            .original-content= raw sub_obj.send(t)
+                        .span8
+                          - I18n.with_locale target_locale do
+                            = render :partial => "globalize_field", :locals => {:field => field, :object => sub_obj, :form => subsubform}
 
             - if @sub_associated_translations[:has_one].present?
               - @sub_associated_translations[:has_one].each do |has_one_associated_model|
