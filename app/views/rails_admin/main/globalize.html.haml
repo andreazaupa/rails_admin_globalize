@@ -63,7 +63,7 @@
               - @sub_associated_translations[:has_many].each do |has_many_associated_model|
 
                 - associated_model = obj.send(has_many_associated_model)
-                - if associated_model
+                - if associated_model && associated_model.first
                   - associated_translations_field = associated_model.first.translated_attributes.keys.collect(&:to_sym)
                   - associated_rails_admin_proxy = associated_model.first.class.rails_admin
                   - associated_rails_admin_fields = associated_rails_admin_proxy.visible_fields.inject({}) { |a,f|  a[f.name] = f if associated_translations_field.include?(f.name) ;a  }
