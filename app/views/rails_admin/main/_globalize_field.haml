@@ -1,8 +1,21 @@
 - in_error = object.errors.present? && object.errors.messages.keys.include?(field.method_name)
 .control-group{:class=>("#{field.css_class} #{field.type}_type #{'error' if in_error}")}
   .controls{:class => field.type.eql?('text') ? 'well' : ''}
-    = field.type
-    - if field.type == :text
+    / = field.type
+    - if field.type == :ck_editor
+      :ruby
+        richtext = 'ckeditor'
+        js_data = {
+          :jspath => field.ckeditor_location ? field.ckeditor_location : field.ckeditor_base_location + "ckeditor.js",
+          :base_location => field.ckeditor_base_location,
+          :options => {
+            :customConfig => field.ckeditor_config_js ? field.ckeditor_config_js : field.ckeditor_base_location + "config.js"
+          }
+        }
+      = form.text_area field.method_name, field.html_attributes.reverse_merge(:data => { :richtext => richtext, :options => js_data.to_json }).reverse_merge(:value => object.send(field.name))
+
+    - elsif field.type == :text
+
       :ruby
         if field.ckeditor
           richtext = 'ckeditor'
