@@ -20,7 +20,7 @@
 %h2= I18n.translate("admin.actions.globalize.title")
 %p= raw I18n.translate("admin.actions.globalize.subtitle", :locale_name => "<strong>#{I18n.locale}</strong>".upcase)
 
-= form_for @object, :url => rails_admin.globalize_path(@object.class.to_s.split("::").map(&:underscore).join("~"), @object.id), :html => {:class => 'globalize-form'} do |form|
+= rails_admin_form_for @object, :url => rails_admin.globalize_path(@abstract_model, @object.id), :as => @abstract_model.param_key, :html => {:multipart => true, :class => 'globalize-form'} do |form|
   = select_tag 'target_locale', options_for_select(  @available_locales, @target_locale ), :id => "target_locale_select", :"data-target-url" => rails_admin.globalize_path(@object.class.to_s.split("::").map(&:underscore).join("~"), @object.id)
 
   - rails_admin_fields.keys.each do |t|
