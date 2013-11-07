@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "Rails Admin plugin to manage Globalize3 translations"
   s.description = "Rails Admin plugin to manage Globalize3 translations"
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "rails", ">= 3.1"
   s.add_dependency "rails_admin"
