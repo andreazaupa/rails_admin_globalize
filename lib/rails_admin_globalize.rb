@@ -8,9 +8,7 @@ require 'rails_admin/config/actions'
 module RailsAdmin
   module Config
     module Actions
-
       class Globalize < Base
-
         RailsAdmin::Config::Actions.register(self)
 
         register_instance_option :pjax? do
@@ -48,17 +46,24 @@ module RailsAdmin
 
             else
               loc = @current_locale = I18n.locale
-              @target_locale = params[:target_locale]
-              I18n.locale = @target_locale
-              p = params[@abstract_model.param_key]
-              p = p.permit! if @object.class.include?(ActiveModel::ForbiddenAttributesProtection) rescue nil
-              result = @object.update_attributes(p)
+              I18n.locale = @target_locale = params[:target_locale]
 
-              I18n.locale = loc
-              if result
+              satisfy_strong_params!
+              sanitize_params_for!(:update)
+
+              @object.set_attributes(params[@abstract_model.param_key])
+              @authorization_adapter && @authorization_adapter.attributes_for(:update, @abstract_model).each do |name, value|
+                @object.send("#{name}=", value)
+              end
+
+              binding.pry
+
+              if @object.save
+                I18n.locale = loc
                 flash[:notice] = I18n.t("rails_admin.globalize.success")
                 redirect_to back_or_index
               else
+                I18n.locale = loc
                 flash[:alert] = I18n.t("rails_admin.globalize.error")
               end
             end
