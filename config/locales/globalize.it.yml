@@ -1,3 +1,4 @@
+# enconding: utf-8
 it:
   admin:
     actions:
@@ -10,6 +11,8 @@ it:
         bulk_link: "Traduci %{model_label_plural}"
         done: "Tradotto"
         associated_translations: "Traduzioni per %{associated_model}"
+
   rails_admin:
     globalize:
+      error: "Non é stato possibile salvare la traduzione."
       success: "Traduzione salvata correttamente"
