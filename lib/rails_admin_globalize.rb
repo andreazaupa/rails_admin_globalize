@@ -56,8 +56,6 @@ module RailsAdmin
                 @object.send("#{name}=", value)
               end
 
-              binding.pry
-
               if @object.save
                 I18n.locale = loc
                 flash[:notice] = I18n.t("rails_admin.globalize.success")
