@@ -3,33 +3,33 @@
 
 .control-group{:class=>("#{field.css_class} #{field.type}_type #{'error' if in_error}")}
   .controls{:class => field.type.eql?('text') ? 'well' : ''}
-    - if field.type == :text
+    - if [:text, :ck_editor, :code_mirror, :wysihtml5].include? field.type
       :ruby
-        if field.ckeditor
+        if field.type == :ck_editor
           richtext = 'ckeditor'
           js_data = {
-            :jspath => field.ckeditor_location ? field.ckeditor_location : field.ckeditor_base_location + "ckeditor.js",
-            :base_location => field.ckeditor_base_location,
+            :jspath => field.location ? field.location : field.base_location + "ckeditor.js",
+            :base_location => field.base_location,
             :options => {
-              :customConfig => field.ckeditor_config_js ? field.ckeditor_config_js : field.ckeditor_base_location + "config.js"
+              :customConfig => field.config_js ? field.config_js : field.base_location + "config.js"
             }
           }
-        elsif field.codemirror
+        elsif field.type == :code_mirror
           richtext = 'codemirror'
           js_data = {
-            :csspath => field.codemirror_css_location,
-            :jspath => field.codemirror_js_location,
-            :options => field.codemirror_config,
-            :locations => field.codemirror_assets
+            :csspath => field.css_location,
+            :jspath => field.js_location,
+            :options => field.config,
+            :locations => field.assets
           }
-        elsif field.bootstrap_wysihtml5
+        elsif field.type == :wysihtml5
           richtext = 'bootstrap-wysihtml5'
           js_data = {
-            :csspath => field.bootstrap_wysihtml5_css_location,
-            :jspath => field.bootstrap_wysihtml5_js_location,
-            :config_options => field.bootstrap_wysihtml5_config_options.to_json
+            :csspath => field.css_location,
+            :jspath => field.js_location,
+            :config_options => field.config_options.to_json
           }
-        elsif field.respond_to?(:rich) && field.rich
+        elsif field.respond_to?(:rich) && field.type == :rich
           richtext = 'rich'
         else
           richtext = false
