@@ -40,6 +40,9 @@ module RailsAdmin
           Proc.new do
             @available_locales = (I18n.available_locales - [I18n.locale])
             @available_locales = @object.available_locales if @object.respond_to?("available_locales")
+            @already_translated_locales = []
+            @already_translated_locales = @object.translated_locales.map(&:to_s) if @object.respond_to?("translated_locales")
+            @not_yet_translated_locales = @available_locales - @already_translated_locales
 
             if request.get?
               @target_locale = params[:target_locale] || @available_locales.first || I18n.locale
