@@ -48,7 +48,6 @@ module RailsAdmin
               loc = @current_locale = I18n.locale
               I18n.locale = @target_locale = params[:target_locale]
 
-              satisfy_strong_params!
               sanitize_params_for!(:update)
 
               @object.set_attributes(params[@abstract_model.param_key])
