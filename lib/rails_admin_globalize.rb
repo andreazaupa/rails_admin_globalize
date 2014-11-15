@@ -43,25 +43,21 @@ module RailsAdmin
 
             if request.get?
               @target_locale = params[:target_locale] || @available_locales.first || I18n.locale
-
             else
-              loc = @current_locale = I18n.locale
-              I18n.locale = @target_locale = params[:target_locale]
+              ::Globalize.with_locale params[:target_locale] do
+                sanitize_params_for!(:update)
 
-              sanitize_params_for!(:update)
+                @object.set_attributes(params[@abstract_model.param_key])
+                @authorization_adapter && @authorization_adapter.attributes_for(:update, @abstract_model).each do |name, value|
+                  @object.send("#{name}=", value)
+                end
 
-              @object.set_attributes(params[@abstract_model.param_key])
-              @authorization_adapter && @authorization_adapter.attributes_for(:update, @abstract_model).each do |name, value|
-                @object.send("#{name}=", value)
-              end
-
-              if @object.save
-                I18n.locale = loc
-                flash[:notice] = I18n.t("rails_admin.globalize.success")
-                redirect_to back_or_index
-              else
-                I18n.locale = loc
-                flash[:alert] = I18n.t("rails_admin.globalize.error")
+                if @object.save
+                  flash[:notice] = I18n.t("rails_admin.globalize.success")
+                  redirect_to back_or_index
+                else
+                  flash[:alert] = I18n.t("rails_admin.globalize.error")
+                end
               end
             end
             @object.inspect
