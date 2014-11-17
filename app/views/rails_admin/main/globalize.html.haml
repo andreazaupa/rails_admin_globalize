@@ -31,7 +31,7 @@
             = raw @object.send(t)
 
       .span8
-        - I18n.with_locale target_locale do
+        - Globalize.with_locale target_locale do
           = render :partial => "globalize_field", :locals => { :object => @object, :form => form, :field => rails_admin_fields[t] }
 
   - if @associated_translations
@@ -55,7 +55,7 @@
                     .original-content= raw obj.send(t)
 
                 .span8
-                  - I18n.with_locale target_locale do
+                  - Globalize.with_locale target_locale do
                     = render :partial => "globalize_field", :locals => {:field => field, :object => obj, :form => subform}
 
           - @sub_associated_translations = collection.first.class.associated_model_to_globalize rescue nil
@@ -80,7 +80,7 @@
                             .original-content= raw sub_obj.send(t)
 
                         .span8
-                          - I18n.with_locale target_locale do
+                          - Globalize.with_locale target_locale do
                             = render :partial => "globalize_field", :locals => {:field => field, :object => sub_obj, :form => subsubform}
 
             - if @sub_associated_translations[:has_one].present?
