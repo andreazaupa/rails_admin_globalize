@@ -11,6 +11,8 @@ it:
         bulk_link: "Traduci %{model_label_plural}"
         done: "Tradotto"
         associated_translations: "Traduzioni per %{associated_model}"
+        already_translated: "Già tradotte"
+        not_yet_translated: "Da tradurre"
 
   rails_admin:
     globalize:
